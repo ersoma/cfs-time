@@ -1,10 +1,10 @@
 CFS Time picker Add-on
 ====================
 
-The Time picker Add-on for [Custom Field Suite](https://uproot.us/)
+The Time picker add-on for [Custom Field Suite](https://uproot.us/)
 
 * Generates an admin-facing control for selecting time
-* Outputs time with HH:MM format / array of two integers
+* Outputs time with hh:mm format / array of two integers
 
 ## Installation
 * Click the "Download ZIP" button on the right side of this GitHub page.

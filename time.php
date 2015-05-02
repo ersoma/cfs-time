@@ -68,14 +68,12 @@ class cfs_time_picker extends cfs_field
     }
 
     function prepare_value( $value, $field = null ) {
-        $result = unserialize( $value[0] );
-        error_log(print_r($result, true));
-        return $result;
+        return unserialize( $value[0] );
     }
 
     function format_value_for_api( $value, $field = null ) {
         $output = '12:00';
-        if ( (! empty( $value['hour'] ) ) && (! empty( $value['minute'] ) ) ) {
+        if ( isset($value['hour'], $value['minute'] ) ) {
             $output = str_pad($value['hour'], 2, "0", STR_PAD_LEFT) . ":" . str_pad($value['minute'], 2, "0", STR_PAD_LEFT);
         }
         return $output;

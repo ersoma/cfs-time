@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: CFS - Time picker Add-on
+Plugin Name: CFS - Time picker add-on
 Plugin URI: http://somaerdelyi.net/
 Description: Adds a time picker field type.
 Version: 1.0.0
