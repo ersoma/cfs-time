@@ -1,4 +1,4 @@
-CFS Time picker Add-on
+CFS Time picker add-on
 ====================
 
 The Time picker add-on for [Custom Field Suite](https://uproot.us/)
