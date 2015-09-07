@@ -58,10 +58,10 @@ class cfs_time_picker extends cfs_field
     }
 
     function pre_save( $value, $field = null ) {
-        if ( isset( $value['hour'] ) && isset( $value['minute'] ) ) {
+        if ( isset( $value[0]['hour'] ) && isset( $value[1]['minute'] ) ) {
             $value = array(
-                'hour' => $value['hour'],
-                'minute' => $value['minute'],
+                'hour' => $value[0]['hour'],
+                'minute' => $value[1]['minute'],
             );
         }
         return serialize( $value );
