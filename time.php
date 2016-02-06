@@ -10,8 +10,8 @@ class cfs_time_picker extends cfs_field
     function html( $field ) {
         if ( empty( $field->value ) || ( ! isset($field->value["hour"])) || ( ! isset($field->value["minute"])) ) {
             $field->value = array(
-                'hour'    => '12',
-                'minute'     => '00',
+                'hour'    => $field->options["default_hour"],
+                'minute'     => $field->options["default_minute"],
             );
         }
         $hours = array();
@@ -75,6 +75,67 @@ class cfs_time_picker extends cfs_field
                 </td>
             </tr>
         </table>
+    <?php
+    }
+
+    function options_html( $key, $field ) {
+        $default_time = array();
+        for ($i = 0; $i < 60; $i++) {
+            $default_time[$i] = ($i < 10) ? '0' . $i : $i;
+        }
+    ?>
+        <tr class="field_option field_option_<?php echo $this->name; ?>">
+            <td class="label">
+                <label><?php _e( 'Default Hour', 'cfs-time' ); ?></label>
+            </td>
+            <td>
+                <?php
+                    CFS()->create_field( array(
+                        'type' => 'select',
+                        'input_name' => "cfs[fields][$key][options][default_hour]",
+                        'value' => ("" !== $this->get_option( $field, 'default_hour' )) ? $this->get_option( $field, 'default_hour' ) : "12",
+                        'options' => array(
+                            'force_single' => 1,
+                            'choices' => array_slice($default_time, 0, 24)
+                        )                        
+                    ));
+                ?>
+            </td>
+        </tr>
+        <tr class="field_option field_option_<?php echo $this->name; ?>">
+            <td class="label">
+                <label><?php _e( 'Default Minute', 'cfs-time' ); ?></label>
+            </td>
+            <td>
+                <?php
+                    CFS()->create_field( array(
+                        'type' => 'select',
+                        'input_name' => "cfs[fields][$key][options][default_minute]",
+                        'value' => ("" !== $this->get_option( $field, 'default_minute' )) ? $this->get_option( $field, 'default_minute' ) : "0",
+                        'options' => array(
+                            'force_single' => 1,
+                            'choices' => $default_time
+                        )                        
+                    ));
+                ?>
+            </td>
+        </tr>
+        <tr class="field_option field_option_<?php echo $this->name; ?>">
+            <td class="label">
+                <label><?php _e( 'Validation', 'cfs' ); ?></label>
+            </td>
+            <td>
+                <?php
+                    CFS()->create_field( array(
+                        'type' => 'true_false',
+                        'input_name' => "cfs[fields][$key][options][required]",
+                        'input_class' => 'true_false',
+                        'value' => $this->get_option( $field, 'required' ),
+                        'options' => array( 'message' => __( 'This is a required field', 'cfs' ) ),
+                    ));
+                ?>
+            </td>
+        </tr>
     <?php
     }
 
