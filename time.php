@@ -24,7 +24,7 @@ class cfs_time_picker extends cfs_field
                 $option = str_replace("%s", "selected", $option);
             else
                 $option = str_replace("%s", "", $option);
-            if ($h < 10) 
+            if ($h < 10 && $field->options["leading_zeros"] == true) 
                 $option = str_replace("%p", "0", $option);
             else
                 $option = str_replace("%p", "", $option);
@@ -122,6 +122,22 @@ class cfs_time_picker extends cfs_field
         </tr>
         <tr class="field_option field_option_<?php echo $this->name; ?>">
             <td class="label">
+                <label><?php _e( 'Leading zeros', 'cfs' ); ?></label>
+            </td>
+            <td>
+                <?php
+                    CFS()->create_field( array(
+                        'type' => 'true_false',
+                        'input_name' => "cfs[fields][$key][options][leading_zeros]",
+                        'input_class' => 'true_false',
+                        'value' => ("" !== $this->get_option( $field, 'leading_zeros' )) ? $this->get_option( $field, 'leading_zeros' ) : true,
+                        'options' => array( 'message' => __( 'Use leading zeros with hours', 'cfs' ) ),
+                    ));
+                ?>
+            </td>
+        </tr>
+        <tr class="field_option field_option_<?php echo $this->name; ?>">
+            <td class="label">
                 <label><?php _e( 'Validation', 'cfs' ); ?></label>
             </td>
             <td>
@@ -155,9 +171,15 @@ class cfs_time_picker extends cfs_field
 
     function format_value_for_api( $value, $field = null ) {
         $output = '12:00';
-        if ( isset($value['hour'], $value['minute'] ) ) {
-            $output = str_pad($value['hour'], 2, "0", STR_PAD_LEFT) . ":" . str_pad($value['minute'], 2, "0", STR_PAD_LEFT);
-        }
+        if ( isset($field) && $field->options["leading_zeros"] == false) {
+            $hour = $value['hour'];
+            $minute = str_pad($value['minute'], 2, "0", STR_PAD_LEFT);
+            $output = $hour . ":" . $minute;
+        } else {
+            if ( isset($value['hour'], $value['minute'] ) ) {
+                $output = str_pad($value['hour'], 2, "0", STR_PAD_LEFT) . ":" . str_pad($value['minute'], 2, "0", STR_PAD_LEFT);
+            }
+        }        
         return $output;
     }
 }
