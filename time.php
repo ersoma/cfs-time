@@ -17,6 +17,14 @@ class cfs_time_picker extends cfs_field
         $hours = array();
         $minutes = array();
         // Creating the hour options
+        if($field->options["required"] == false){
+            $option = "<option value='-1' %s></option>";
+            if ($field->value["hour"] == -1)
+                $option = str_replace("%s", "selected", $option);
+            else
+                $option = str_replace("%s", "", $option);
+            $hours[] = $option;
+        }
         for ($h = 0; $h <= 23; $h++) {
             $option = "<option value='%v' %s>%p%v</option>";
             $option = str_replace("%v", $h, $option);
@@ -31,6 +39,14 @@ class cfs_time_picker extends cfs_field
             $hours[] = $option;
         }
         // Creating the minute options
+        if($field->options["required"] == false){
+            $option = "<option value='-1' %s></option>";
+            if ($field->value["minute"] == -1)
+                $option = str_replace("%s", "selected", $option);
+            else
+                $option = str_replace("%s", "", $option);
+            $minutes[] = $option;
+        }
         for ($h = 0; $h <= 59; $h++) {
             $option = "<option value='%v' %s>%p%v</option>";
             $option = str_replace("%v", $h, $option);
@@ -48,6 +64,7 @@ class cfs_time_picker extends cfs_field
         <script>
             (function($) {
                 $(function() {
+                    // add get_field_value function to CFS['get_field_value'] array
                     if(CFS !== undefined && CFS['get_field_value'] !== undefined && CFS['get_field_value']['time_picker'] === undefined){
                         CFS['get_field_value']['time_picker'] = function(el) {
                             var hour = $($('div.field.field-time1 select :selected')[0]).val();
@@ -55,6 +72,31 @@ class cfs_time_picker extends cfs_field
                             return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute)
                         };
                     }
+                    // clear button handler
+                    $('button[name="<?php echo $field->input_name; ?>[clear]"]').on('click', function(){
+                        $('select[name="<?php echo $field->input_name; ?>[hour]"]').val(-1);
+                        $('select[name="<?php echo $field->input_name; ?>[minute]"]').val(-1);
+                    });
+                    // hour change handler
+                    $('select[name="<?php echo $field->input_name; ?>[hour]"]').on('change', function(){
+                        if($('select[name="<?php echo $field->input_name; ?>[hour]"]').val() == -1){
+                            $('select[name="<?php echo $field->input_name; ?>[minute]"]').val(-1);
+                        } else {
+                            if($('select[name="<?php echo $field->input_name; ?>[minute]"]').val() == -1){
+                                $('select[name="<?php echo $field->input_name; ?>[minute]"]').val(0);
+                            }
+                        }
+                    });
+                    // minute change handler
+                    $('select[name="<?php echo $field->input_name; ?>[minute]"]').on('change', function(){
+                        if($('select[name="<?php echo $field->input_name; ?>[minute]"]').val() == -1){
+                            $('select[name="<?php echo $field->input_name; ?>[hour]"]').val(-1);
+                        } else {
+                            if($('select[name="<?php echo $field->input_name; ?>[hour]"]').val() == -1){
+                                $('select[name="<?php echo $field->input_name; ?>[hour]"]').val(0);
+                            }
+                        }
+                    })
                 });
             })(jQuery);
         </script>
@@ -73,6 +115,11 @@ class cfs_time_picker extends cfs_field
                         <?php echo implode("\n", $minutes); ?>
                     </select>
                 </td>
+                <?php if($field->options["required"] == false) { ?>
+                    <td>
+                        <button type="button" name="<?php echo $field->input_name; ?>[clear]"><?php _e( 'Clear', 'cfs-time' ); ?></button>
+                    </td>
+                <?php } ?>
             </tr>
         </table>
     <?php
@@ -81,7 +128,7 @@ class cfs_time_picker extends cfs_field
     function options_html( $key, $field ) {
         $default_time = array();
         for ($i = 0; $i < 60; $i++) {
-            $default_time[$i] = ($i < 10) ? '0' . $i : $i;
+            $default_time[(string)$i] = ($i < 10) ? '0' . $i : $i;
         }
     ?>
         <tr class="field_option field_option_<?php echo $this->name; ?>">
@@ -157,10 +204,24 @@ class cfs_time_picker extends cfs_field
 
     function pre_save( $value, $field = null ) {
         if ( isset( $value[0]['hour'] ) && isset( $value[1]['minute'] ) ) {
-            $value = array(
-                'hour' => $value[0]['hour'],
-                'minute' => $value[1]['minute'],
-            );
+            if ($value[0]['hour'] >= 0 && $value[1]['minute'] >= 0) {
+                $value = array(
+                    'hour' => $value[0]['hour'],
+                    'minute' => $value[1]['minute'],
+                );    
+            } else {
+                $value = array(
+                    'hour' => '-1',
+                    'minute' => '-1',
+                );
+            }            
+        } else {
+            if ($value['hour'] < 0 || $value['minute'] < 0) {
+                $value = array(
+                    'hour' => '-1',
+                    'minute' => '-1',
+                );
+            }  
         }
         return serialize( $value );
     }
@@ -170,7 +231,10 @@ class cfs_time_picker extends cfs_field
     }
 
     function format_value_for_api( $value, $field = null ) {
-        $output = '12:00';
+        $output = '';
+        if($value['hour'] < 0 || $value['minute'] < 0){
+            return $output;
+        }
         if ( isset($field) && $field->options["leading_zeros"] == false) {
             $hour = $value['hour'];
             $minute = str_pad($value['minute'], 2, "0", STR_PAD_LEFT);
