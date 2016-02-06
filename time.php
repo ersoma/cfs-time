@@ -18,25 +18,46 @@ class cfs_time_picker extends cfs_field
         $minutes = array();
         // Creating the hour options
         for ($h = 0; $h <= 23; $h++) {
-            $option = "<option value='%v' %s>%v</option>";
+            $option = "<option value='%v' %s>%p%v</option>";
             $option = str_replace("%v", $h, $option);
-            if($h == $field->value["hour"])
+            if ($h == $field->value["hour"])
                 $option = str_replace("%s", "selected", $option);
             else
                 $option = str_replace("%s", "", $option);
+            if ($h < 10) 
+                $option = str_replace("%p", "0", $option);
+            else
+                $option = str_replace("%p", "", $option);
             $hours[] = $option;
         }
         // Creating the minute options
         for ($h = 0; $h <= 59; $h++) {
-            $option = "<option value='%v' %s>%v</option>";
+            $option = "<option value='%v' %s>%p%v</option>";
             $option = str_replace("%v", $h, $option);
             if($h == $field->value["minute"])
                 $option = str_replace("%s", "selected", $option);
             else
                 $option = str_replace("%s", "", $option);
+            if ($h < 10) 
+                $option = str_replace("%p", "0", $option);
+            else
+                $option = str_replace("%p", "", $option);
             $minutes[] = $option;
         }
     ?>
+        <script>
+            (function($) {
+                $(function() {
+                    if(CFS !== undefined && CFS['get_field_value'] !== undefined && CFS['get_field_value']['time_picker'] === undefined){
+                        CFS['get_field_value']['time_picker'] = function(el) {
+                            var hour = $($('div.field.field-time1 select :selected')[0]).val();
+                            var minute = $($('div.field.field-time1 select :selected')[1]).val();
+                            return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute)
+                        };
+                    }
+                });
+            })(jQuery);
+        </script>
         <table>
             <tr>
                 <td>
