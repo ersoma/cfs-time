@@ -7,6 +7,8 @@ Version: 1.0.0
 Author: Soma Erdelyi
 Author URI: http://somaerdelyi.net/
 License: GPL2
+Text Domain: cfs-time
+Domain Path: /languages/
 */
 
 $cfs_time_picker_addon = new cfs_time_picker_addon();
@@ -15,6 +17,10 @@ class cfs_time_picker_addon
 {
     function __construct() {
         add_filter('cfs_field_types', array($this, 'cfs_field_types'));
+        add_action( 'plugins_loaded', 'cfstime_load_textdomain' );
+        function cfstime_load_textdomain() {
+          load_plugin_textdomain( 'cfs-time', false, plugin_basename( dirname( __FILE__ ) ) . '/languages' ); 
+        }
     }
 
     function cfs_field_types( $field_types ) {

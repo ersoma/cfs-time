@@ -4,7 +4,7 @@ class cfs_time_picker extends cfs_field
 {
     function __construct() {
         $this->name = 'time_picker';
-        $this->label = __( 'Time picker', 'cfs' );
+        $this->label = __( 'Time picker', 'cfs-time' );
     }
 
     function html( $field ) {
@@ -169,7 +169,7 @@ class cfs_time_picker extends cfs_field
         </tr>
         <tr class="field_option field_option_<?php echo $this->name; ?>">
             <td class="label">
-                <label><?php _e( 'Leading zeros', 'cfs' ); ?></label>
+                <label><?php _e( 'Leading zeros', 'cfs-time' ); ?></label>
             </td>
             <td>
                 <?php
@@ -178,14 +178,14 @@ class cfs_time_picker extends cfs_field
                         'input_name' => "cfs[fields][$key][options][leading_zeros]",
                         'input_class' => 'true_false',
                         'value' => ("" !== $this->get_option( $field, 'leading_zeros' )) ? $this->get_option( $field, 'leading_zeros' ) : true,
-                        'options' => array( 'message' => __( 'Use leading zeros with hours', 'cfs' ) ),
+                        'options' => array( 'message' => __( 'Use leading zeros with hours', 'cfs-time' ) ),
                     ));
                 ?>
             </td>
         </tr>
         <tr class="field_option field_option_<?php echo $this->name; ?>">
             <td class="label">
-                <label><?php _e( 'Validation', 'cfs' ); ?></label>
+                <label><?php cfs_e( 'Validation', 'cfs' ); ?></label>
             </td>
             <td>
                 <?php
@@ -194,7 +194,7 @@ class cfs_time_picker extends cfs_field
                         'input_name' => "cfs[fields][$key][options][required]",
                         'input_class' => 'true_false',
                         'value' => $this->get_option( $field, 'required' ),
-                        'options' => array( 'message' => __( 'This is a required field', 'cfs' ) ),
+                        'options' => array( 'message' => cfs__( 'This is a required field', 'cfs' ) ),
                     ));
                 ?>
             </td>
@@ -247,3 +247,18 @@ class cfs_time_picker extends cfs_field
         return $output;
     }
 }
+
+
+// Wrappers for l10n functions in cfs domain
+if ( ! function_exists( 'cfs__' ) ) {
+    function cfs__( $string, $textdomain = 'cfs' ) {
+        return __( $string, $textdomain );
+    }
+}
+if ( ! function_exists( 'cfs_e' ) ) {
+    function cfs_e( $string, $textdomain = 'cfs' ) {
+        echo __( $string, $textdomain );
+    }
+}
+
+?>
