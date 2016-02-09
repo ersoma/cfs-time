@@ -117,7 +117,7 @@ class cfs_time_picker extends cfs_field
                 </td>
                 <?php if($field->options["required"] == false) { ?>
                     <td>
-                        <button type="button" name="<?php echo $field->input_name; ?>[clear]"><?php _e( 'Clear', 'cfs-time' ); ?></button>
+                        <button type="button" name="<?php echo $field->input_name; ?>[clear]" class="button-secondary" ><?php _e( 'Clear', 'cfs-time' ); ?></button>
                     </td>
                 <?php } ?>
             </tr>
