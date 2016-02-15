@@ -100,7 +100,12 @@ class cfs_time_picker extends cfs_field
                 });
             })(jQuery);
         </script>
-        <table>
+        <?php if($field->options["required"] == false) { ?>
+            <button type="button" name="<?php echo $field->input_name; ?>[clear]" class="button-secondary" style="float:right;" >
+                <?php _e( 'Clear', 'cfs-time' ); ?>
+            </button>
+        <?php } ?>
+        <table style="width: auto;">
             <tr>
                 <td>
                     <select name="<?php echo $field->input_name; ?>[hour]" class="<?php echo $field->input_class; ?>">
@@ -115,11 +120,6 @@ class cfs_time_picker extends cfs_field
                         <?php echo implode("\n", $minutes); ?>
                     </select>
                 </td>
-                <?php if($field->options["required"] == false) { ?>
-                    <td>
-                        <button type="button" name="<?php echo $field->input_name; ?>[clear]" class="button-secondary" ><?php _e( 'Clear', 'cfs-time' ); ?></button>
-                    </td>
-                <?php } ?>
             </tr>
         </table>
     <?php
