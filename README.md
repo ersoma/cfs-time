@@ -14,5 +14,6 @@ Time picker add-on for [Custom Field Suite](http://docs.customfieldsuite.com/)
 
 ## Translations
 * Hungarian (hu_HU)
+* Japanese (ja)
 
 Based on the [CFS Google Maps Add-on](https://github.com/mgibbs189/cfs-google-maps) by [Matt Gibbs](https://uproot.us/)
